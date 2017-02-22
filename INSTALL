@@ -1,25 +1,34 @@
+# create and activate a new virtualenv
+virtualenv prngmgr
+source /bin/activate
+
+# install django (version is required for peeringdb 0.5.0)
+pip install django==1.8.14
+
 # create new django project
 django-admin startproject myprngmgr
 cd myprngmgr/
 
 # clone prngmgr github repo
-git clone https://github.com/benmaddison/prngmgr.git
+git clone https://github.com/wolcomm/prngmgr.git
 
-# install django_peeringdb from pip
+# install requirements
+cd prngmgr
+pip install -e .
 
 # add django_peeringdb and prngmgr to installed apps
-#   and add PDB config to end of file
+#   and add PDB config to end of file (starting COUNTRIES_OVERRIDE)
 vi ../myprngmgr/settings.py
 
 INSTALLED_APPS = (
-    'prngmgr',
-    'django_peeringdb',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_peeringdb',
+    'prngmgr',
 )
 
 COUNTRIES_OVERRIDE = {
@@ -28,16 +37,13 @@ COUNTRIES_OVERRIDE = {
 PEERINGDB_ABSTRACT_ONLY = False
 #PEERINGDB_SYNC_STRIP_TZ = True
 
-# add "include" url path to projects root urls.py
+# add imports to the project root urls.py
 vi ../myprngmgr/urls.py
 
-urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('prngmgr.urls')),
-]
+from django.conf.urls import url, include
 
 # copy local_settings.py.example to local_settings.py and edit values
-cp docs/examples/local_settings.py.example local_settings.py
+cp docs/examples/local_settings.py.example prngmgr/local_settings.py
 
 MY_ASN = 65000
 
@@ -49,6 +55,7 @@ SNMP = {
 }
 
 # initialize database
+cd ..
 python manage.py makemigrations
 python manage.py migrate
 
