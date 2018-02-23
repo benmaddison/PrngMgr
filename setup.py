@@ -48,7 +48,7 @@ setup(
     include_package_data=True,
 
     url='https://github.com/wolcomm/prngmgr',
-    download_url='https://github.com/prngmgr/%s' % version,
+    download_url='https://github.com/wolcomm/prngmgr/archive/%s.zip' % version,
 
     install_requires=requirements,
 )
